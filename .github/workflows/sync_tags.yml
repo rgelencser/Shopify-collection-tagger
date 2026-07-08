@@ -1,0 +1,19 @@
+name: Sync Collection Tags
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # runs daily at 2am UTC
+  workflow_dispatch:       # allows manual trigger from GitHub
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - run: pip install requests
+      - name: Write token
+        run: echo "${{ secrets.SHOPIFY_TOKEN }}" > .shopify_token
+      - run: python sync_tags.py
